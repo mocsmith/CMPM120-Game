@@ -13,7 +13,7 @@
 		<canvas id='orbit' width='1000' height='700'></canvas>
 		
 		<!-- This file is where your Javascript code goes -->
-		<script src="main.js"></script>
-		<script src="blackbar.js"></script>
+		<script src="js/main.js"></script>
+		<script src="js/blackbar.js"></script>
 	</body>
 </html>
