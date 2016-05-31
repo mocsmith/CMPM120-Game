@@ -11,6 +11,8 @@
       var hackSpawnRate = .02;
       var accessSpawnRate = .02;
       var leakSpawnRate = .01;
+      var socialSpawnRate = .003;
+      var mediaSpawnRate = .003;
 
       var gameLeak = false;
       var unrest = 0;

@@ -84,6 +84,33 @@
               if(charged < 20) ++charged;
             }
           }
+
+          for (var i = 0; i < hackers.length; ++i) {
+            if (!hackers[i].dead && cartesian_circle_collision(this.x, this.Y, hackers[i].x, hackers[i].Y, 10, 10)) {
+              hackers[i].dead = true;
+              this.dead = true;
+              ++totalScore;
+              if(charged < 20) ++charged;
+            }
+          }
+
+          for (var i = 0; i < socials.length; ++i) {
+            if (!socials[i].dead && cartesian_circle_collision(this.x, this.Y, socials[i].x, socials[i].Y, 8, 10)) {
+              socials[i].dead = true;
+              this.dead = true;
+              ++totalScore;
+              if(charged < 20) ++charged;
+            }
+          }
+
+          for (var i = 0; i < medias.length; ++i) {
+            if (!medias[i].dead && cartesian_circle_collision(this.x, this.Y, medias[i].x, medias[i].Y, 8, 10)) {
+              medias[i].dead = true;
+              this.dead = true;
+              ++totalScore;
+              if(charged < 20) ++charged;
+            }
+          }
         };
 
         this.draw = function() {
@@ -108,12 +135,12 @@
           access(attacking enemy)
     
       */
-      function Access() {
+      function Access(angle, y) {
         this.deathTimer = 10; //delay between dying and not being drawn
         this.dead = false; //used to see if it alive
         this.speed = -gameSpeed / 1.65;
-        this.angle = (2 * Math.PI) * Math.random();
-        this.y = 800; //make sure it is off screen
+        this.angle = angle;
+        this.y = y; //make sure it is off screen
         this.x = 0;
         this.Y = 0;
         this.hitPaddle = false;
@@ -231,7 +258,7 @@
             this.speed = -gameSpeed / 5;
             this.hitPaddle = true;
             ++totalScore;
-            if(charged < 20) ++charged;
+          if(charged < 20) ++charged;
           } else if (this.hitPaddle) {
             this.speed = -gameSpeed / 5;
           } else if (!this.hitPaddle) {
@@ -262,7 +289,11 @@
         };
       }
       var leaks = new Array();
-      
+      /*
+
+      hacker enemy
+
+      */
       function Hacker() {
         this.deathTimer = 10; //delay between dying and not being drawn
         this.dead = false; //used to see if it alive
@@ -311,7 +342,7 @@
 
           if (!this.dead) { //if not hit
             this.y += this.speed; //move
-            this.angle += .01;
+            this.angle += .001*gameSpeed;
             if(this.angle > 2 * Math.PI) {
               this.angle = 0;
             }
@@ -338,9 +369,198 @@
       }
       var hackers = new Array();
       
-      
-      
+      /*
+            social enemy
 
+      */
+      var socials = new Array();
+
+      function Social(angleSpeed, angleSeed, y) {
+        this.deathTimer = 10; //delay between dying and not being drawn
+        this.dead = false; //used to see if it alive
+        this.speed = -gameSpeed / 2;
+        this.angle = angleSeed;
+        this.y = y; //make sure it is off screen
+        this.x = 0;
+        this.Y = 0;
+        this.hitPaddle = false;
+        this.waveCollided = false;
+        this.angleSpeed = angleSpeed;
+        this.duplicateTimer = 500;
+        
+        this.draw = function() {
+          if (this.deathTimer > 0) { //if alive
+            context.save();
+            context.translate(canvas.width / 2, canvas.height / 2); //move to center
+            context.rotate(-this.angle + Math.PI / 2);
+
+            context.beginPath();
+            context.fillStyle = '#6698FF';//light blue
+            context.arc(0, this.y, 8, 0, 2 * Math.PI, false); //purple circle
+            context.fill();
+            context.closePath();
+            context.restore();
+          }
+        };
+
+        this.update = function() {
+          this.duplicateTimer-=gameSpeed;
+
+          if(this.duplicateTimer < 0 && !this.dead && !this.hitPaddle){     //duplicating
+            this.duplicateTimer = 500;
+            this.angleSpeed = -.0002;
+            var temp = new Social(.0002, this.angle, this.y);
+            socials.push(temp);
+          }
+
+          this.angle += this.angleSpeed * gameSpeed;
+
+          var collided = exterior_circle_collision(this.y, 0, 8, 107);
+          
+          if(waveFired && this.y > wave.y) {
+            this.waveCollided = exterior_circle_collision(this.y, wave.y, 8, wave.r);
+          }
+          
+          if(this.waveCollided) {
+            this.dead = true;
+          }
+
+          //gamespeed HACK
+          if (!this.hitPaddle && collided && paddle_angle_collision(this.angle)) {
+            this.speed = gameSpeed / 1.65;
+            this.hitPaddle = true;
+            ++totalScore;
+            if(charged < 20) ++charged;
+          } else if (collided) {
+            this.speed = -(gameSpeed / 2);
+            this.hitPaddle = true;
+          } else if (!this.hitPaddle) {
+            this.speed = -(gameSpeed / 2);
+          } else if (this.hitPaddle) {
+            this.speed = gameSpeed / 2;
+          }
+
+          if (!this.dead) { //if not hit
+            this.y += this.speed; //move
+            if (this.y < 10) {
+              this.dead = true; //if reached information          
+              --totalScore;
+              ++unrest;
+            }
+            if (this.y > canvas.height && this.speed > 0) {
+              this.dead = true;
+            }
+          } else {
+            if (this.deathTimer > 0) { //death timer decrease
+              this.deathTimer--;
+            }
+          }
+
+          //console.log(this.angle);
+          this.x = -(Math.cos(this.angle) * this.y);
+          this.Y = -(Math.sin(this.angle) * this.y);
+          //console.log(this.x + ", " + this.Y);
+
+        };
+      }
+        /*
+            social enemy
+
+      */
+      var medias = new Array();
+
+      function Media() {
+        this.deathTimer = 10; //delay between dying and not being drawn
+        this.dead = false; //used to see if it alive
+        this.speed = -gameSpeed / 2;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.y = 800; //make sure it is off screen
+        this.x = 0;
+        this.Y = 0;
+        this.hitPaddle = false;
+        this.waveCollided = false;
+        this.stopTimer = 920;
+        this.spawnTimer = 1100;
+        this.stop = false;
+        
+        this.draw = function() {
+          if (this.deathTimer > 0) { //if alive
+            context.save();
+            context.translate(canvas.width / 2, canvas.height / 2); //move to center
+            context.rotate(-this.angle + Math.PI / 2);
+
+            context.beginPath();
+            context.fillStyle = '#151B54';//midnight blue
+            context.arc(0, this.y, 15, 0, 2 * Math.PI, false); //purple circle
+            context.fill();
+            context.closePath();
+            context.restore();
+          }
+        };
+
+        this.update = function() {
+          this.spawnTimer-=gameSpeed;
+          if(this.spawnTimer < 0 && !this.dead && !this.hitPaddle){     //spawning
+            this.spawnTimer = 1000;
+            var temp = new Access(this.angle, this.y);
+            accesses.push(temp);
+          }
+          if(this.stopTimer < 0){     //stop
+            this.stop = true;
+          } else this.stopTimer-=gameSpeed;
+          var collided = exterior_circle_collision(this.y, 0, 15, 107);
+          
+          if(waveFired && this.y > wave.y) {
+            this.waveCollided = exterior_circle_collision(this.y, wave.y, 15, wave.r);
+          }
+          
+          if(this.waveCollided) {
+            this.dead = true;
+          }
+
+          //gamespeed HACK
+          if (!this.hitPaddle && collided && paddle_angle_collision(this.angle)) {
+            this.speed = gameSpeed / 1.65;
+            this.hitPaddle = true;
+            ++totalScore;
+            if(charged < 20) ++charged;
+          } else if (collided) {
+            this.speed = -(gameSpeed / 2);
+            this.hitPaddle = true;
+          } else if (!this.hitPaddle) {
+            this.speed = -(gameSpeed / 2);
+          } else if (this.hitPaddle) {
+            this.speed = gameSpeed / 2;
+          }
+
+          if (!this.dead) { //if not hit
+            if(!this.stop) this.y += this.speed; //move
+            if (this.y < 10) {
+              this.dead = true; //if reached information          
+              --totalScore;
+              ++unrest;
+            }
+            if (this.y > canvas.height && this.speed > 0) {
+              this.dead = true;
+            }
+          } else {
+            if (this.deathTimer > 0) { //death timer decrease
+              this.deathTimer--;
+            }
+          }
+
+          //console.log(this.angle);
+          this.x = -(Math.cos(this.angle) * this.y);
+          this.Y = -(Math.sin(this.angle) * this.y);
+          //console.log(this.x + ", " + this.Y);
+
+        };
+      }
+      /*
+
+
+      
+      */
       function Wave() {
         this.x = 0;
         this.y = 0;
@@ -395,7 +615,7 @@
       function new_access() {
         if (accesses.length < 8) {
           if (Math.random() < accessSpawnRate) {
-            accesses.push(new Access());
+            accesses.push(new Access((2 * Math.PI) * Math.random(), 800));
           }
         }
       }
@@ -413,9 +633,21 @@
           if (Math.random() < hackSpawnRate) {
             var temp = new Hacker();
             hackers.push(temp);
-            //hackers.push(temp);
-            //hackers.push(temp);
           }
+        }
+      }
+
+      function new_socials() {
+        if (Math.random() < socialSpawnRate) {
+          var temp = new Social(0, (2 * Math.PI) * Math.random(), 800);
+          socials.push(temp);
+        }
+      }
+
+      function new_medias() {
+        if (Math.random() < mediaSpawnRate) {
+          var temp = new Media();
+          medias.push(temp);
         }
       }
 
@@ -474,7 +706,7 @@
 
       function update() {
 
-        if (unrest >= 10 && !gameLeak) {
+        if (unrest >= 30 && !gameLeak) {
           unrest = 0;
          // if (Math.random() > .5)
            blackbar.active = true;
@@ -554,6 +786,24 @@
           }
         }
 
+        for (var i = 0; i < socials.length;) {
+          if (!socials[i].dead) {
+            socials[i].update();
+            ++i;
+          } else {
+            socials.splice(i, 1);
+          }
+        }
+
+        for (var i = 0; i < medias.length;) {
+          if (!medias[i].dead) {
+            medias[i].update();
+            ++i;
+          } else {
+            medias.splice(i, 1);
+          }
+        }
+
         if (waveFired) {
           if(!wave.offScreen) {
             wave.update();
@@ -563,6 +813,8 @@
         new_access();
         new_leaks();
         new_hacks();
+        new_socials();
+        new_medias();
         writeMessage(canvas, radars.length);
         if (blackbar.active) blackbar.update();
         if (stamp.active) stamp.update();
@@ -608,6 +860,12 @@
         }
         for (var iter = 0; iter < hackers.length; iter++) {
           hackers[iter].draw();
+        }
+        for (var iter = 0; iter < socials.length; iter++) {
+          socials[iter].draw();
+        }
+        for (var iter = 0; iter < medias.length; iter++) {
+          medias[iter].draw();
         }
 
         if (waveFired) wave.draw();
