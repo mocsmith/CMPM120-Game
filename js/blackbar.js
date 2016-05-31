@@ -1,233 +1,168 @@
-//Blackbox minigame
-//blank colored page http://i.imgur.com/zAdDF0n.png
-//sample important-looking page http://i.imgur.com/J1wp1Su.png
+var canvas = document.getElementById('orbit');
+var context = canvas.getContext('2d');
 
-//a temporary array setup that would allow us to include several different pages that could be pulled from at random to be the background image
-//var sources = new Array();
-//sources.push('http://i.imgur.com/zAdDF0n.png');
 
-//array containing flags for each zone on the image
-var checks = new Array();
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
-checks.push(false);
 
-//array containing the coordinates of the zones
-var zoneList = new Array();
 
-//outlines zone information
-function Zone(x, y, width, height) {
-  this.X = x;
-  this.Y = y;
-  this.width = width;
-  this.height = height;
-}
+function Blackbar() {
+  this.inkCircleArray = new Array();
+  this.inkLineArray = new Array();
+  this.active = false;
+  //creates the background image
+  this.page = new Image();
+  this.page.width = 400;
+  this.page.height = 600;
+  this.page.X = canvas.width/2-this.page.width/2;
+  this.page.Y = canvas.height/2-this.page.height/2;
+  this.page.src = 'http://i.imgur.com/J1wp1Su.png';
 
-//list of the (currently) nine zones' coordinates on the page
-zoneA = new Zone(90, 90, 50, 50);
-zoneList.push(zoneA);
-zoneB = new Zone(190, 90, 50, 50);
-zoneList.push(zoneB);
-zoneC = new Zone(290, 90, 50, 50);
-zoneList.push(zoneC);
-zoneD = new Zone(90, 190, 50, 50);
-zoneList.push(zoneD);
-zoneE = new Zone(190, 190, 50, 50);
-zoneList.push(zoneE);
-zoneF = new Zone(290, 190, 50, 50);
-zoneList.push(zoneF);
-zoneG = new Zone(90, 290, 50, 50);
-zoneList.push(zoneG);
-zoneH = new Zone(190, 290, 50, 50);
-zoneList.push(zoneH);
-zoneI = new Zone(290, 290, 50, 50);
-zoneList.push(zoneI);
 
-//creates the background image
-var page = new Image();
-page.x = 0;
-page.y = 0;
-page.width = 400;
-page.height = 500;
-page.src = /*sources[0]*/ 'http://i.imgur.com/J1wp1Su.png';
 
-var flag = false,
-  prevX = 0,
-  currX = 0,
-  prevY = 0,
-  currY = 0,
-  dot_flag = false;
+  //tracks whether or not the mouse is being held down
+  this.mouseDown = false;
 
-var color = "black",
-  lWidth = 20;
+  this.left = false;
+  this.right = false;
+  this.prevX = 0;
+  this.currX = 0;
+  this.prevY = 0;
+  this.currY = 0;
+  this.color = "black";
+  this.flag = false;
+  this.dot_flag = false;
+  this.lWidth = 20;
 
-canvas.addEventListener("mousemove", function(e) {
-  findxy('move', e)
-}, false);
-canvas.addEventListener("mousedown", function(e) {
-  findxy('down', e)
-}, false);
-canvas.addEventListener("mouseup", function(e) {
-  findxy('up', e)
-}, false);
-canvas.addEventListener("mouseout", function(e) {
-  findxy('out', e)
-}, false);
-
-//draws the initial line segment at the mouse position
-function drawLine() {
-  context.beginPath();
-  context.moveTo(prevX, prevY);
-  context.lineTo(currX, currY);
-  context.strokeStyle = color;
-  context.lineWidth = lWidth;
-  context.stroke();
-  context.closePath();
-}
+  this.pen = new Image();
+  this.pen.width = 1079/5;
+  this.pen.height = 1295/5;
+  this.pen.Y = mousePosCart.y-this.pen.height;
+  this.pen.X = mousePosCart.x-10;
+  this.pen.src = 'http://i.imgur.com/O13Nie9.png';
 
 //draws continuing rectangles that connect to the original mouse position when mousedown is true
-function findxy(res, e) {
-  if (res == 'down') {
-    prevX = currX;
-    prevY = currY;
-    currX = e.clientX - canvas.offsetLeft;
-    currY = e.clientY - canvas.offsetTop;
+  this.findxy = function(res, e) {
+    if (res == 'down') {
+      this.prevX = this.currX;
+      this.prevY = this.currY;
+      this.currX = e.clientX - canvas.offsetLeft;
+      this.currY = e.clientY - canvas.offsetTop;
 
-    flag = true;
-    dot_flag = true;
-    if (dot_flag) {
-      context.beginPath();
-      context.fillStyle = color;
-      context.arc(currX, currY, 10, 0, 2*Math.PI);
-      context.fill();
-      context.closePath();
-      dot_flag = false;
-    }
-  }
-  if (res == 'up' || res == "out") {
-    flag = false;
-  }
-  if (res == 'move') {
-    if (flag) {
-      prevX = currX;
-      prevY = currY;
-      currX = e.clientX - canvas.offsetLeft;
-      currY = e.clientY - canvas.offsetTop;
-      drawLine();
-      
-      context.beginPath();
-      context.fillStyle = color;
-      context.arc(currX, currY, 10, 0, 2*Math.PI);
-      context.fill();
-      context.closePath();
-    }
-  }
-}
+      this.flag = true;
+      this.dot_flag = true;
+      if (this.dot_flag) {
+        
+  
+        var tempCir = new Array();
+        tempCir.push(this.currX);     
+        tempCir.push(this.currY);
+        this.inkCircleArray.push(tempCir);
+        this.dot_flag = false;
 
-//tracks whether or not the mouse is being held down
-var mouseDown = false;
-document.body.onmousedown = function() {
-  mouseDown = true;
-}
-document.body.onmouseup = function() {
-  mouseDown = false;
-}
-
-//marks a specific flag in the checks() array as true
-function handleClick(e) {
-  for (var iter = 0; iter < checks.length; iter++) {
-    if (checkZone(zoneList[iter], currX, currY)) {
-      if (mouseDown) {
-        checks[iter] = true;
       }
     }
-  }
-}
-
-//checks whether or not the mouse is within one of the marked zones
-function checkZone(zone, x, y) {
-  var minX = zone.X;
-  var maxX = zone.X + zone.width;
-  var minY = zone.Y;
-  var maxY = zone.Y + zone.height;
-  var mx = x;
-  var my = y;
-  if (mx >= minX && mx <= maxX && my >= minY && my <= maxY) {
-    return true;
-  }
-  return false;
-}
-
-var reset = false;
-
-//checks if the game needs to be reset (if it does, a message is displayed and the canvasReset function is called after two seconds)
-function gameReset() {
-  if (reset == true) {
-    context.font = "30px Verdana";
-    context.fillText("Success!", 130, 450);
-    for (var iter = 0; iter < checks.length; iter++) {
-      checks[iter] = false;
+    if (res == 'up' || res == "out") {
+      this.flag = false;
     }
-    setTimeout(canvasReset, 2000);
-  }
-}
-
-//clears the user's writing and redraws the canvas
-function canvasReset() {
-  if (reset == true) {
-    canvas.width = canvas.width;
-    context.drawImage(page, page.x, page.y, page.width, page.height);
-    reset = false;
-  }
-}
-
-function update() {
-  handleClick(event);
-  gameReset();
-}
-
-var a = 0;
-var complete = false;
-
-//draws the canvas
-function draw() {
-  //canvas.width = canvas.width;
-  if (a == 0) {
-    context.drawImage(page, page.x, page.y, page.width, page.height);
-    a++;
-  }
-
-  /*
-  //draws the exact zones the user must black out (for testing purposes)
-    context.fillRect(90,90,50,50);
-    context.fillRect(190,90,50,50);
-    context.fillRect(290,90,50,50);
-    context.fillRect(90,190,50,50);
-    context.fillRect(190,190,50,50);
-    context.fillRect(290,190,50,50);
-    context.fillRect(90,290,50,50);
-    context.fillRect(190,290,50,50);
-    context.fillRect(290,290,50,50);
-  */
-
-  //iterates through the checks array and checks if all 9 zones on the page have been marked
-  for (var i = 0; i < checks.length; i++) {
-    if (checks[i] == false) {
-      complete = false;
-      break;
-    } else {
-      complete = true;
+    if (res == 'move') {
+      if (this.flag) {
+        this.prevX = this.currX;
+        this.prevY = this.currY;
+        this.currX = e.clientX - canvas.offsetLeft;
+        this.currY = e.clientY - canvas.offsetTop;
+        var tempLine = new Array();      
+        tempLine.push(this.prevX);     
+        tempLine.push(this.prevY);
+        tempLine.push(this.currX);     
+        tempLine.push(this.currY);
+        this.inkLineArray.push(tempLine);
+        var tempCir = new Array();
+        tempCir.push(this.currX);     
+        tempCir.push(this.currY);
+        this.inkCircleArray.push(tempCir);
+        
+        if (!this.left && this.currX < canvas.width/2) this.left = true;
+        if (!this.right && this.currX > canvas.width/2) this.right = true;
+      }
     }
-  }
+  };
 
-  //resets the minigame if the previous checks return true
-  if (complete == true) {
-    reset = true;
-  }
+
+
+  this.complete = false;
+
+  //draws the canvas
+  this.draw = function() {
+    context.drawImage(this.page, this.page.X, this.page.Y, this.page.width, this.page.height);
+    
+    context.rect(this.page.X, this.page.Y, this.page.width, this.page.height);
+    context.clip();
+   
+    context.save();
+    for (var i = 0; i < this.inkCircleArray.length; i++) {
+      var cirX = this.inkCircleArray[i][0];
+      var cirY = this.inkCircleArray[i][1];
+      context.beginPath();
+      context.fillStyle = this.color;
+      context.arc(cirX, cirY, 10, 0, 2*Math.PI);
+      context.fill();
+      context.closePath();
+    }
+    for (var i = 0; i < this.inkLineArray.length; i++) {
+      var prevLineX = this.inkLineArray[i][0];
+      var prevLineY = this.inkLineArray[i][1];
+      var curLineX = this.inkLineArray[i][2];
+      var curLineY = this.inkLineArray[i][3];
+      context.beginPath();
+      context.moveTo(prevLineX, prevLineY);
+      context.lineTo(curLineX, curLineY);
+      context.strokeStyle = this.color;
+      context.lineWidth = this.lWidth;
+      context.stroke();
+      context.closePath();
+    }
+    context.restore();
+    context.drawImage(this.pen, this.pen.X, this.pen.Y, this.pen.width, this.pen.height);
+  };
+  
+  //draws the canvas
+  this.update = function() {
+  //clear
+    if (this.inkLineArray.length > 200 && this.right && this.left){
+      this.inkLineArray = [];
+      this.inkCircleArray = [];
+      this.active = false;
+      this.mouseDown = false;         
+      this.prevX = 0;
+      this.currX = 0;
+      this.prevY = 0;
+      this.currY = 0;
+      this.left = false;
+      this.right = false;
+      this.flag = false;
+      this.dot_flag = false;
+      gameLeak = false;
+    }
+    this.pen.Y = mousePosCart.y-this.pen.height;
+    this.pen.X =  mousePosCart.x-10;
+  };
+  
 }
+
+var blackbar = new Blackbar();
+
+document.body.onmousedown = function() {
+  blackbar.mouseDown = true;
+};
+document.body.onmouseup = function() {
+  blackbar.mouseDown = false;
+};
+
+canvas.addEventListener("mousedown", function(e) {
+  if (blackbar.active) blackbar.findxy('down', e)
+}, false);
+canvas.addEventListener("mouseup", function(e) {
+  if (blackbar.active) blackbar.findxy('up', e)
+}, false);
+canvas.addEventListener("mouseout", function(e) {
+  if (blackbar.active) blackbar.findxy('out', e)
+}, false);
