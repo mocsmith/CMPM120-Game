@@ -54,9 +54,19 @@
         this.Y = 0;
         this.dead = false;
 
+
+        this.image = new Image();
+        this.image.width = 20;
+        this.image.height = 20;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/mib3A3C56.png';
+        
+
         this.update = function() {
           this.speed = gameSpeed / 1.4;
           this.y += this.speed;
+          this.image.Y += this.speed;
 
           this.x = -(Math.cos(this.angle) * this.y);
           this.Y = -(Math.sin(this.angle) * this.y);
@@ -117,12 +127,7 @@
           context.save();
           context.translate(canvas.width / 2, canvas.height / 2); //move to center
           context.rotate(-this.angle + Math.PI / 2);
-
-          context.beginPath();
-          context.fillStyle = 'green';
-          context.arc(0, this.y, 10, 0, 2 * Math.PI, false); //purple circle
-          context.fill();
-          context.closePath();
+          context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
           context.restore();
         };
       }
@@ -146,17 +151,22 @@
         this.hitPaddle = false;
         this.waveCollided = false;
         
+
+        this.image = new Image();
+        this.image.width = 20;
+        this.image.height = 20;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/accsessor.png';
+        
+
         this.draw = function() {
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2);
 
-            context.beginPath();
-            context.fillStyle = 'purple';
-            context.arc(0, this.y, 10, 0, 2 * Math.PI, false); //purple circle
-            context.fill();
-            context.closePath();
+            context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
           }
         };
@@ -191,6 +201,7 @@
 
           if (!this.dead) { //if not hit
             this.y += this.speed; //move
+            this.image.Y += this.speed;
             if (this.y < 10) {
               this.dead = true; //if reached information          
               --totalScore;
@@ -229,17 +240,21 @@
         this.hitPaddle = false;
         this.waveCollided = false;
 
+
+        this.image = new Image();
+        this.image.width = 20;
+        this.image.height = 20;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/infolock.png';
+
         this.draw = function() {
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2); //rotate to mouse
 
-            context.beginPath();
-            context.fillStyle = 'red';
-            context.arc(0, this.y, 10, 0, 2 * Math.PI, false); //purple circle
-            context.fill();
-            context.closePath();
+            context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
           }
         };
@@ -272,6 +287,7 @@
 
           if (!this.dead) { //if not hit
             this.y += this.speed; //move
+            this.image.Y += this.speed; //move
 
             if (!(this.x > -canvas.width / 2 && this.x < canvas.width / 2 && this.Y > -canvas.height / 2 && this.Y < canvas.height / 2)) {
               totalScore -= 5;
@@ -305,17 +321,21 @@
         this.hitPaddle = false;
         this.waveCollided = false;
         
+
+        this.image = new Image();
+        this.image.width = 20;
+        this.image.height = 20;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/hacker.png';
+
         this.draw = function() {
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2);
 
-            context.beginPath();
-            context.fillStyle = 'black';
-            context.arc(0, this.y, 10, 0, 2 * Math.PI, false); //purple circle
-            context.fill();
-            context.closePath();
+            context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
           }
         };
@@ -342,6 +362,7 @@
 
           if (!this.dead) { //if not hit
             this.y += this.speed; //move
+            this.image.Y += this.speed; //move
             this.angle += .001*gameSpeed;
             if(this.angle > 2 * Math.PI) {
               this.angle = 0;
@@ -378,7 +399,7 @@
       function Social(angleSpeed, angleSeed, y) {
         this.deathTimer = 10; //delay between dying and not being drawn
         this.dead = false; //used to see if it alive
-        this.speed = -gameSpeed / 2;
+        this.speed = -gameSpeed / 5;
         this.angle = angleSeed;
         this.y = y; //make sure it is off screen
         this.x = 0;
@@ -386,19 +407,24 @@
         this.hitPaddle = false;
         this.waveCollided = false;
         this.angleSpeed = angleSpeed;
-        this.duplicateTimer = 500;
+        this.duplicateTimer = 1500;
         
+
+        this.image = new Image();
+        this.image.width = 16;
+        this.image.height = 16;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/social.png';
+
         this.draw = function() {
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2);
 
-            context.beginPath();
-            context.fillStyle = '#6698FF';//light blue
-            context.arc(0, this.y, 8, 0, 2 * Math.PI, false); //purple circle
-            context.fill();
-            context.closePath();
+            
+            context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
           }
         };
@@ -407,9 +433,9 @@
           this.duplicateTimer-=gameSpeed;
 
           if(this.duplicateTimer < 0 && !this.dead && !this.hitPaddle){     //duplicating
-            this.duplicateTimer = 500;
-            this.angleSpeed = -.0002;
-            var temp = new Social(.0002, this.angle, this.y);
+            this.duplicateTimer = 800;
+            this.angleSpeed = -1*Math.abs(this.angleSpeed)-.0003;
+            var temp = new Social(Math.abs(this.angleSpeed)+.0003, this.angle, this.y);
             socials.push(temp);
           }
 
@@ -427,21 +453,23 @@
 
           //gamespeed HACK
           if (!this.hitPaddle && collided && paddle_angle_collision(this.angle)) {
-            this.speed = gameSpeed / 1.65;
+            this.speed = gameSpeed / 5;
             this.hitPaddle = true;
             ++totalScore;
             if(charged < 20) ++charged;
           } else if (collided) {
-            this.speed = -(gameSpeed / 2);
+            this.speed = -(gameSpeed / 5);
             this.hitPaddle = true;
           } else if (!this.hitPaddle) {
-            this.speed = -(gameSpeed / 2);
+            this.speed = -(gameSpeed / 5);
           } else if (this.hitPaddle) {
-            this.speed = gameSpeed / 2;
+            this.angleSpeed = 0;
+            this.speed = gameSpeed / 5;
           }
 
           if (!this.dead) { //if not hit
             this.y += this.speed; //move
+            this.image.Y += this.speed; //move
             if (this.y < 10) {
               this.dead = true; //if reached information          
               --totalScore;
@@ -483,17 +511,21 @@
         this.spawnTimer = 1100;
         this.stop = false;
         
+
+        this.image = new Image();
+        this.image.width = 30;
+        this.image.height = 30;
+        this.image.X = 0 - this.image.width/2;
+        this.image.Y = this.y - this.image.height/2;
+        this.image.src = 'art/news.png';
+
         this.draw = function() {
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2);
 
-            context.beginPath();
-            context.fillStyle = '#151B54';//midnight blue
-            context.arc(0, this.y, 15, 0, 2 * Math.PI, false); //purple circle
-            context.fill();
-            context.closePath();
+            context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
           }
         };
@@ -534,7 +566,10 @@
           }
 
           if (!this.dead) { //if not hit
-            if(!this.stop) this.y += this.speed; //move
+            if(!this.stop){
+              this.y += this.speed; //move
+              this.image.Y += this.speed; //move
+            }
             if (this.y < 10) {
               this.dead = true; //if reached information          
               --totalScore;
@@ -705,12 +740,17 @@
        */
 
       function update() {
+        //update spawnrate
+        hackSpawnRate = .002 * gameSpeed;
+        accessSpawnRate = .002 * gameSpeed;
+        leakSpawnRate = .001 * gameSpeed;
+        socialSpawnRate = .0003 * gameSpeed;
+        mediaSpawnRate = .0003 * gameSpeed;
 
         if (unrest >= 30 && !gameLeak) {
           unrest = 0;
-         // if (Math.random() > .5)
-           blackbar.active = true;
-          //else stamp.active = true;         
+          if (Math.random() > .5) blackbar.active = true;           
+          else stamp.active = true;         
           gameLeak = true;
         }
         if (gameLeak) {
@@ -828,7 +868,7 @@
 
       function draw() {
         canvas.width = canvas.width;
-        context.fillStyle = 'white';
+        context.fillStyle = '#F0F0F0';
         context.fillRect(0, 0, canvas.width, canvas.height); //background
 
         paddle.draw();

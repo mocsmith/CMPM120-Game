@@ -8,11 +8,13 @@
        * 
        */
 
-      var hackSpawnRate = .02;
-      var accessSpawnRate = .02;
-      var leakSpawnRate = .01;
-      var socialSpawnRate = .003;
-      var mediaSpawnRate = .003;
+      var gameSpeed = 10; //10 is full speed
+
+      var hackSpawnRate = .002 * gameSpeed;
+      var accessSpawnRate = .002 * gameSpeed;
+      var leakSpawnRate = .001 * gameSpeed;
+      var socialSpawnRate = .0003 * gameSpeed;
+      var mediaSpawnRate = .0003 * gameSpeed;
 
       var gameLeak = false;
       var unrest = 0;
@@ -25,7 +27,6 @@
 
       var totalScore = 0;
 
-      var gameSpeed = 10;
 
       var paddleAngle = 0;
 
