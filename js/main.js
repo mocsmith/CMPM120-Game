@@ -97,10 +97,13 @@
 
           for (var i = 0; i < hackers.length; ++i) {
             if (!hackers[i].dead && cartesian_circle_collision(this.x, this.Y, hackers[i].x, hackers[i].Y, 10, 10)) {
-              hackers[i].dead = true;
               this.dead = true;
-              ++totalScore;
-              if(charged < 20) ++charged;
+              if (hackers[i].shield) hackers[i].shield = false;
+              else {
+                hackers[i].dead = true;
+                ++totalScore;
+                if(charged < 20) ++charged;
+              }
             }
           }
 
@@ -313,13 +316,14 @@
       function Hacker() {
         this.deathTimer = 10; //delay between dying and not being drawn
         this.dead = false; //used to see if it alive
-        this.speed = -gameSpeed;
+        this.speed = -gameSpeed / 2;
         this.angle = (2 * Math.PI) * Math.random();
         this.y = 800; //make sure it is off screen
         this.x = 0;
         this.Y = 0;
         this.hitPaddle = false;
         this.waveCollided = false;
+        this.shield = true;
         
 
         this.image = new Image();
@@ -330,10 +334,16 @@
         this.image.src = 'art/hacker.png';
 
         this.draw = function() {
+
           if (this.deathTimer > 0) { //if alive
             context.save();
             context.translate(canvas.width / 2, canvas.height / 2); //move to center
             context.rotate(-this.angle + Math.PI / 2);
+            context.beginPath();
+            context.arc(0, this.y, 15, 0, 2 * Math.PI, false);
+            context.fillStyle = '#6698FF';
+            if (this.shield) context.fill();  //draw shield
+            context.closePath();
 
             context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
             context.restore();
@@ -347,17 +357,17 @@
           
           //gamespeed HACK
           if (!this.hitPaddle && collided && paddle_angle_collision(this.angle)) {
-            this.speed = gameSpeed;
+            this.speed = gameSpeed/2;
             this.hitPaddle = true;
             ++totalScore;
             if(charged < 20) ++charged;
           } else if (collided) {
-            this.speed = -(gameSpeed);
+            this.speed = -(gameSpeed/2);
             this.hitPaddle = true;
           } else if (!this.hitPaddle) {
-            this.speed = -(gameSpeed);
+            this.speed = -(gameSpeed/2);
           } else if (this.hitPaddle) {
-            this.speed = gameSpeed;
+            this.speed = gameSpeed/2;
           }
 
           if (!this.dead) { //if not hit
@@ -638,7 +648,7 @@
             radars.push(new Radar(finalAngle));
             finalAngle += .1;
           }
-        } else if (reload > reloadMax / 3) { //3 shots
+        } else if (reload > reloadMax / 2.6) { //3 shots
           for (var i = 0; i < 3; ++i) {
             radars.push(new Radar(finalAngle + .1));
             finalAngle += .1;
