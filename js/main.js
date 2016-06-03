@@ -759,7 +759,8 @@
 
         if (unrest >= 30 && !gameLeak) {
           unrest = 0;
-          if (Math.random() > .5) blackbar.active = true;           
+          if (Math.random() > .66) blackbar.active = true;     
+          else if(Math.random() > .5) googlesearch.active = true;
           else stamp.active = true;         
           gameLeak = true;
         }
@@ -868,6 +869,7 @@
         writeMessage(canvas, radars.length);
         if (blackbar.active) blackbar.update();
         if (stamp.active) stamp.update();
+        if (googlesearch.active) googlesearch.update();
       }
 
       /*
@@ -935,6 +937,7 @@
 
         if (blackbar.active) blackbar.draw();
         if (stamp.active) stamp.draw();
+        if (googlesearch.active) googlesearch.draw();
       }
 
 
