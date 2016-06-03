@@ -1,5 +1,3 @@
-//Drag minigame
-
 var canvas = document.getElementById('mygame');
 var ctx = canvas.getContext('2d');
 
