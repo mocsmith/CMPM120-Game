@@ -60,7 +60,7 @@
         this.image.height = 20;
         this.image.X = 0 - this.image.width/2;
         this.image.Y = this.y - this.image.height/2;
-        this.image.src = 'art/mib3A3C56.png';
+        this.image.src = 'art/mibv2.png';
         
 
         this.update = function() {
@@ -331,7 +331,7 @@
         this.image.height = 20;
         this.image.X = 0 - this.image.width/2;
         this.image.Y = this.y - this.image.height/2;
-        this.image.src = 'art/hacker.png';
+        this.image.src = 'art/anon.png';
 
         this.draw = function() {
 

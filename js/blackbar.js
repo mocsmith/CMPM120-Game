@@ -33,11 +33,11 @@ function Blackbar() {
   this.lWidth = 20;
 
   this.pen = new Image();
-  this.pen.width = 1079/5;
-  this.pen.height = 1295/5;
+  this.pen.width = 1000/5;
+  this.pen.height = 1000/5;
   this.pen.Y = mousePosCart.y-this.pen.height;
   this.pen.X = mousePosCart.x-10;
-  this.pen.src = 'http://i.imgur.com/O13Nie9.png';
+  this.pen.src = 'art/pen.png';
 
 //draws continuing rectangles that connect to the original mouse position when mousedown is true
   this.findxy = function(res, e) {

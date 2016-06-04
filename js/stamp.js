@@ -3,24 +3,22 @@ function Stamp() {
   this.yPos = mousePosCart.y;
 	this.active = false;
   this.image = new Image();			//backgorund
-  this.image.width = 301*1.5;
-  this.image.height = 396*1.5;
+  this.image.width = 1000/1.5;
+  this.image.height = 1000/1.5;
   this.image.Y = canvas.height/2-this.image.height/2;
   this.image.X = canvas.width/2-this.image.width/2;
-  this.image.src = 'http://i.imgur.com/5TCCxAH.png';				
+  this.image.src = 'art/folder.png';				
   this.classifieds = new Array();
   this.endTimer = 20;
 
   this.stamp = new Image();
-  this.stamp.width = 200/1.5;
-  this.stamp.height = 200/1.5;
+  this.stamp.width = 1000/6;
+  this.stamp.height = 1000/6;
   this.stamp.Y = this.xPos;
   this.stamp.X = this.yPos;
-  this.stamp.src = 'http://i.imgur.com/SFVT7cJ.png';
+  this.stamp.src = 'art/stamp.png';
 
   this.draw = function() {
-    context.beginPath();
-    context.globalAlpha = .9;
     context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
     context.closePath();
     for (var iter = 0; iter < this.classifieds.length; iter++) {
@@ -51,11 +49,11 @@ var stamp = new Stamp();
 */
 function Classified(x,y) {
   this.image = new Image();
-  this.image.width = 796/5;
-  this.image.height = 382/5;
+  this.image.width = 1000/7;
+  this.image.height = 1000/6;
   this.image.Y = y-5;
   this.image.X = x-this.image.width/2;
-  this.image.src = 'http://i.imgur.com/nun92on.png'
+  this.image.src = 'art/classified.png'
 
   this.draw = function() {
     context.drawImage(this.image, this.image.X, this.image.Y, 
