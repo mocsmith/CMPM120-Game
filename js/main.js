@@ -4,10 +4,20 @@
     
       */
       function Paddle() {
+
+        this.image = new Image();
+        this.image.width = 120;
+        this.image.height = 120;
+        this.image.X = -this.image.width/2;
+        this.image.Y = -32 - this.image.height;
+        this.image.src = 'art/paddle.png';
+
         this.draw = function() {
           context.save();
           context.translate(canvas.width / 2, canvas.height / 2); //move to center
           context.rotate(-paddleAngle - Math.PI / 2); //rotate to mouse
+
+
 
           context.beginPath(); //used to clip the circles
           context.rect(-60, -115, 120, 26);
@@ -21,22 +31,24 @@
           context.closePath();
 
           context.beginPath();
-          context.fillStyle = 'black';
+          context.fillStyle = '#F0F0F0';
           context.arc(0, -13, 100, 0, 2 * Math.PI, false); //black circle
           context.fill();
           context.closePath();
 
           context.beginPath(); //recharge bar
-          context.fillStyle = 'green';
+          context.fillStyle = '#63668C';
           context.rect(-60 * reload / reloadMax, -115, 120 * reload / reloadMax, 26);
           context.fill();
           context.closePath();
 
           context.beginPath(); //second white circle to elipse the black
-          context.fillStyle = 'white';
+          context.fillStyle = '#F0F0F0';
           context.arc(0, 36, 140, 0, 2 * Math.PI, false);
           context.fill();
           context.closePath();
+
+          context.drawImage(this.image, this.image.X, this.image.Y, this.image.width, this.image.height);
           context.restore();
         };
       }
