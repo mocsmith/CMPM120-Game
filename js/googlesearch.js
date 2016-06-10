@@ -227,7 +227,8 @@ function googleSearch() {
 
   //draws the canvas
   this.draw = function() {
-    canvas.width = canvas.width;
+    context.rect(200, 150, 600, 400);
+    context.clip();
     context.drawImage(this.trashPic, this.trashPic.X, this.trashPic.Y, this.trashPic.width, this.trashPic.height);
     context.drawImage(this.goodPic1, this.goodPic1.X, this.goodPic1.Y, this.goodPic1.width, this.goodPic1.height);
     context.drawImage(this.goodPic2, this.goodPic2.X, this.goodPic2.Y, this.goodPic2.width, this.goodPic2.height);
