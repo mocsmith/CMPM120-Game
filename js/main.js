@@ -771,9 +771,9 @@
 
         if (unrest >= 30 && !gameLeak) {
           unrest = 0;
-          if (Math.random() > .66) blackbar.active = true;           
-          else if (Math.random() > .5) googlesearch.active = true;
-          else stamp.active = true;
+          if (Math.random() < .33) shredMini.active = true;     
+          else if (Math.random() > .5) blackbar.active = true;                 
+          else stamp.active = true;         
           gameLeak = true;
         }
         if (gameLeak) {
@@ -881,7 +881,7 @@
         writeMessage(canvas, radars.length);
         if (blackbar.active) blackbar.update();
         if (stamp.active) stamp.update();
-        if (googlesearch.active) googlesearch.update();
+        if (shredMini.active) shredMini.update();
       }
 
       /*
@@ -949,7 +949,7 @@
 
         if (blackbar.active) blackbar.draw();
         if (stamp.active) stamp.draw();
-        if (googlesearch.active) googlesearch.draw();
+        if (shredMini.active) shredMini.draw();
       }
 
 
@@ -960,10 +960,8 @@
       */
 
       canvas.addEventListener('mousemove', function(evt) {
+        if (shredMini.active) shredMini.moveObj(evt)
         if (blackbar.active) blackbar.findxy('move', evt)
-        mousePosPolar = getmousePosPolar(canvas, evt);
-        mousePosCart = getmousePosCart(canvas, evt);
-        if (googlesearch.active) googlesearch.findxy2('move', evt)
         mousePosPolar = getmousePosPolar(canvas, evt);
         mousePosCart = getmousePosCart(canvas, evt);
 
@@ -985,11 +983,26 @@
         }
       }, false);
 
+
+      canvas.addEventListener("mousedown", function(e) {
+        if (blackbar.active) blackbar.findxy('down', e);
+        if (shredMini.active) shredMini.selectObj(e);
+      }, false);
+      canvas.addEventListener("mouseup", function(e) {
+        if (blackbar.active) blackbar.findxy('up', e);
+        if (shredMini.active)shredMini.deselectObj(e);
+
+      }, false);
+      canvas.addEventListener("mouseout", function(e) {
+        if (blackbar.active) blackbar.findxy('out', e);
+      }, false);
+
+      document.addEventListener("keydown", keyFunc);
+
       function clickEvent() {
         if (stamp.active) add_classify();
         if (!gameLeak) add_radar();
       }
-
       canvas.addEventListener("click", clickEvent);
 
       function writeMessage(canvas, message) {
@@ -1012,7 +1025,6 @@
         }
       }
 
-      document.addEventListener("keydown", keyFunc);
 
       function game_loop() {
         draw();

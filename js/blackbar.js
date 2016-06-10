@@ -1,6 +1,3 @@
-var canvas = document.getElementById('orbit');
-var context = canvas.getContext('2d');
-
 
 
 
@@ -11,10 +8,10 @@ function Blackbar() {
   //creates the background image
   this.page = new Image();
   this.page.width = 400;
-  this.page.height = 600;
+  this.page.height = 500;
   this.page.X = canvas.width/2-this.page.width/2;
   this.page.Y = canvas.height/2-this.page.height/2;
-  this.page.src = 'http://i.imgur.com/J1wp1Su.png';
+  this.page.src = 'art/panama.png';
 
 
 
@@ -156,13 +153,3 @@ document.body.onmousedown = function() {
 document.body.onmouseup = function() {
   blackbar.mouseDown = false;
 };
-
-canvas.addEventListener("mousedown", function(e) {
-  if (blackbar.active) blackbar.findxy('down', e)
-}, false);
-canvas.addEventListener("mouseup", function(e) {
-  if (blackbar.active) blackbar.findxy('up', e)
-}, false);
-canvas.addEventListener("mouseout", function(e) {
-  if (blackbar.active) blackbar.findxy('out', e)
-}, false);
