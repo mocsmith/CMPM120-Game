@@ -73,7 +73,7 @@ function googleSearch() {
   this.temp = false;
 
   //checks the current mouse position and updates it for other functions
-  this.findxy = function(res, e) {
+  this.findxy2 = function(res, e) {
     if (res == 'down') {
       this.prevX = this.currX;
       this.prevY = this.currY;
@@ -223,6 +223,8 @@ function googleSearch() {
   this.g = 0;
   this.h = 0;
 
+  this.complete = false;
+
   //draws the canvas
   this.draw = function() {
     canvas.width = canvas.width;
@@ -313,28 +315,14 @@ function googleSearch() {
 
 var googlesearch = new googleSearch();
 
-function draw() {
-  googlesearch.draw();
-}
-
-function update() {
-  googlesearch.update();
-}
-
-function game_loop() {
-  draw();
-  update();
-}
-
 canvas.addEventListener("mousemove", function(e) {
-  googlesearch.findxy('move', e)
+  if (googlesearch.active) googlesearch.findxy2('move', e)
 }, false);
 canvas.addEventListener("mousedown", function(e) {
-  googlesearch.findxy('down', e)
+  if (googlesearch.active) googlesearch.findxy2('down', e)
 }, false);
 canvas.addEventListener("mouseup", function(e) {
-  googlesearch.findxy('up', e)
+  if (googlesearch.active) googlesearch.findxy2('up', e)
 }, false);
 
 setInterval(game_loop, 30);
-
