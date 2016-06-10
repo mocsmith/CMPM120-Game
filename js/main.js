@@ -771,9 +771,10 @@
 
         if (unrest >= 30 && !gameLeak) {
           unrest = 0;
-          if (Math.random() < .33) shredMini.active = true;     
-          else if (Math.random() > .5) blackbar.active = true;                 
-          else stamp.active = true;         
+          if (Math.random() < .25) shredMini.active = true;     
+          else if (Math.random() < .33) blackbar.active = true;                 
+          else if (Math.random() > .5) stamp.active = true;
+          else googlesearch.active = true;
           gameLeak = true;
         }
         if (gameLeak) {
@@ -882,6 +883,7 @@
         if (blackbar.active) blackbar.update();
         if (stamp.active) stamp.update();
         if (shredMini.active) shredMini.update();
+        if (googlesearch.active) googlesearch.update();
       }
 
       /*
@@ -950,6 +952,7 @@
         if (blackbar.active) blackbar.draw();
         if (stamp.active) stamp.draw();
         if (shredMini.active) shredMini.draw();
+        if (googlesearch.active) googlesearch.draw();
       }
 
 
@@ -962,6 +965,9 @@
       canvas.addEventListener('mousemove', function(evt) {
         if (shredMini.active) shredMini.moveObj(evt)
         if (blackbar.active) blackbar.findxy('move', evt)
+        mousePosPolar = getmousePosPolar(canvas, evt);
+        mousePosCart = getmousePosCart(canvas, evt);
+        if (googlesearch.active) googlesearch.findxy2('move', evt)
         mousePosPolar = getmousePosPolar(canvas, evt);
         mousePosCart = getmousePosCart(canvas, evt);
 
