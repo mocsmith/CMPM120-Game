@@ -82,7 +82,7 @@ function googleSearch() {
       this.flag = true;
       this.mouseDown = true;
     }
-    if (res == 'up') {
+    if (res == 'up' || res == 'out') {
       this.flag = false;
       this.mouseDown = false;
     }
@@ -323,6 +323,9 @@ canvas.addEventListener("mousedown", function(e) {
 }, false);
 canvas.addEventListener("mouseup", function(e) {
   if (googlesearch.active) googlesearch.findxy2('up', e)
+}, false);
+canvas.addEventListener("mouseout", function(e) {
+  if (googlesearch.active) googlesearch.findxy2('out', e)
 }, false);
 
 setInterval(game_loop, 30);
